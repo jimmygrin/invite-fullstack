@@ -67,16 +67,16 @@ const notgoing_List = () => {
   }
 }
 
-const userNotGoing = () => {
-  return dispatch => {
-    axios.post("/notgoing").then(resp => {
-      dispatch({
-        type: NOTGOING,
-        payload: resp.data.results
-      })
-    })
-  }
-}
+// const userNotGoing = () => {
+//   return dispatch => {
+//     axios.post("/notgoing").then(resp => {
+//       dispatch({
+//         type: NOTGOING,
+//         payload: resp.data.results
+//       })
+//     })
+//   }
+// }
 
 function userGoing (user) {
   console.log('userGoing')
@@ -89,7 +89,16 @@ function userGoing (user) {
 
 }
 
+function userNotGoing (user) {
+  console.log('userNotGoing')
+  return dispatch =>{
+    axios.post("/users/notgoing", {user}).then(resp => {
+      
+      dispatch(getUsers())
+    })
+  }
 
+}
 
 
 // function userNotgoing (user) {
@@ -115,10 +124,15 @@ export function useUsers() {
     console.log('sendGoing', user)
     dispatch(userGoing(user))
   }
+  const sendNotGoing = (user) => {
+    console.log('sendNotGoing', user)
+    dispatch(userNotGoing(user))
+  }
+  
 
   useEffect(() => {
     get()
   }, [dispatch])
 
-  return { users, sendGoing, going }
+  return { users, sendGoing, sendNotGoing, going }
 }
