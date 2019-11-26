@@ -1,0 +1,19 @@
+html {
+    box-sizing: border-box;
+  }
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+
+  .container {
+    
+    width: 300px;
+    padding: 20px;
+  }
+
+  link {
+    padding: 5px;
+  }

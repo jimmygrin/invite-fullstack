@@ -23,9 +23,9 @@ export default (state = initialState, action) => {
     case GET_USERS:
       return { ...state, users: action.payload }
     case GOING:
-      return {...state, going: action.payload}  
+      return {...state, going:[...state.going, action.payload]}  
     case NOTGOING:
-      return { ...state, user: action.payload}    
+      return { ...state, notgoing: [...state.notgoing,action.payload]}    
     default:
       return state
   }
@@ -43,24 +43,24 @@ const getUsers = () => {
   }
 }
 
-const going_List = () => {
+const goingList = () => {
   return dispatch => {
     axios.get("http://localhost:8080/users/going").then(resp => {
       console.log(resp.data)
       dispatch({
 
-        type: GET_USERS,
+        type: GOING,
         payload: resp.data
       })
     })
   }
 }
 
-const notgoing_List = () => {
+const notgoingList = () => {
   return dispatch => {
     axios.get("/notgoing").then(resp => {
       dispatch({
-        type: GET_USERS,
+        type: NOTGOING,
         payload: resp.data.results
       })
     })
@@ -82,8 +82,12 @@ function userGoing (user) {
   console.log('userGoing')
   return dispatch =>{
     axios.post("/users/going", {user}).then(resp => {
-      
+      dispatch({
+        type: GOING,
+        payload: resp.data
+      })
       dispatch(getUsers())
+      
     })
   }
 
@@ -93,9 +97,14 @@ function userNotGoing (user) {
   console.log('userNotGoing')
   return dispatch =>{
     axios.post("/users/notgoing", {user}).then(resp => {
-      
+      dispatch({
+        type: NOTGOING,
+        payload: resp.data
+      })
       dispatch(getUsers())
+      
     })
+    
   }
 
 }
@@ -118,6 +127,7 @@ function userNotGoing (user) {
 export function useUsers() {
   const users = useSelector(appState => appState.userState.users)
   const going = useSelector(appState => appState.userState.going)
+  const notgoing = useSelector(appState => appState.userState.notgoing)
   const dispatch = useDispatch()
   const get = () => dispatch(getUsers())
   const sendGoing = (user) => {
@@ -134,5 +144,5 @@ export function useUsers() {
     get()
   }, [dispatch])
 
-  return { users, sendGoing, sendNotGoing, going }
+  return { users, sendGoing, sendNotGoing, going, notgoing }
 }
